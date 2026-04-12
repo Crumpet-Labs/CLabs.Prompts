@@ -11,11 +11,6 @@ public class ScrollableListOptions
     public string? Title { get; init; }
 
     /// <summary>
-    /// Lines of non-list content to subtract from terminal height. Default: 10.
-    /// </summary>
-    public int ChromeLines { get; init; } = 10;
-
-    /// <summary>
     /// Minimum viewport height in rows. Default: 6.
     /// </summary>
     public int MinViewportHeight { get; init; } = 6;

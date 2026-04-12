@@ -30,12 +30,6 @@ public class MultiSelectOptions
     public string DependencyLabel { get; init; } = "dependency";
 
     /// <summary>
-    /// Number of fixed lines above and below the picker (headers, prompts, shell chrome)
-    /// subtracted from terminal height to compute viewport size. Default: 14.
-    /// </summary>
-    public int ChromeLines { get; init; } = 14;
-
-    /// <summary>
     /// Minimum viewport height in entry rows. Default: 6.
     /// </summary>
     public int MinViewportHeight { get; init; } = 6;

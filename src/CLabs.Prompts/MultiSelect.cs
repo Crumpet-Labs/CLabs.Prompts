@@ -55,12 +55,15 @@ public static class MultiSelect
         var cursorPos = 0;
         var scrollOffset = 0;
 
-        var viewportHeight = Math.Clamp(
-            Console.WindowHeight - options.ChromeLines,
-            Math.Min(options.MinViewportHeight, entries.Count),
-            entries.Count);
+        // Fixed viewport: cap at 20 entries max, min 6.
+        // The terminal scrolls naturally as we write. MoveUpAndRewrite uses
+        // relative ANSI cursor movement so it works regardless of scroll state.
+        var maxViewport = 20;
+        var viewportHeight = Math.Clamp(maxViewport, Math.Min(options.MinViewportHeight, entries.Count), entries.Count);
 
         Console.CursorVisible = false;
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        using var vtMode = ConsoleMode.Enable();
 
         try
         {

@@ -1,6 +1,9 @@
 # CLabs.Prompts
 
-Interactive terminal prompts for .NET CLI tools. Features a multi-select picker with grouped items, smooth scrolling, and reactive dependency highlighting.
+Interactive terminal prompts for .NET CLI tools. Zero dependencies.
+
+- **MultiSelect** -- grouped multi-select picker with reactive dependency highlighting and smooth scrolling
+- **ScrollableList** -- read-only scrollable list with a detail pane for the highlighted item
 
 ## Installation
 
@@ -18,13 +21,15 @@ Then reference the `.nupkg` in your project:
 dotnet add package CLabs.Prompts --source ./path/to/nupkg
 ```
 
-### Project reference (monorepo)
+### Project reference
 
 ```xml
 <ProjectReference Include="..\CLabs.Prompts\src\CLabs.Prompts\CLabs.Prompts.csproj" />
 ```
 
 ## Quick Start
+
+### Multi-Select
 
 ```csharp
 using CLabs.Prompts;
@@ -38,6 +43,19 @@ var selected = MultiSelect.Prompt(
 Console.WriteLine($"You selected: {string.Join(", ", selected)}");
 ```
 
+### Scrollable List
+
+```csharp
+using CLabs.Prompts;
+
+ScrollableList.Show(
+    [
+        ("apple — A crisp fruit", "Malus domestica | Available year-round"),
+        ("banana — A yellow fruit", "Musa | Rich in potassium"),
+        ("cherry — A small stone fruit", "Prunus avium | Seasonal"),
+    ]);
+```
+
 ## Documentation
 
 - [Usage Guide](Docs/usage-guide.md) -- Full API reference and examples
@@ -46,6 +64,10 @@ Console.WriteLine($"You selected: {string.Join(", ", selected)}");
 
 - .NET 9.0+
 - A terminal that supports ANSI escape codes (all modern terminals)
+
+## Acknowledgements
+
+The Windows console mode handling was inspired by [Spectre.Console](https://github.com/spectreconsole/spectre.console) (MIT licensed), which uses `SetConsoleMode` with `ENABLE_VIRTUAL_TERMINAL_PROCESSING` for reliable ANSI rendering on Windows.
 
 ## License
 

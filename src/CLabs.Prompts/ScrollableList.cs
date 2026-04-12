@@ -33,16 +33,16 @@ public static class ScrollableList
 
         options ??= new ScrollableListOptions();
 
-        // Detail pane takes 3 lines (blank + detail + blank), plus instructions = 5 extra
-        var viewportHeight = Math.Clamp(
-            Console.WindowHeight - options.ChromeLines - 5,
-            Math.Min(options.MinViewportHeight, items.Length),
+        var maxViewport = 15;
+        var viewportHeight = Math.Clamp(maxViewport, Math.Min(options.MinViewportHeight, items.Length),
             items.Length);
 
         var cursor = 0;
         var scrollOffset = 0;
 
         Console.CursorVisible = false;
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+        using var vtMode = ConsoleMode.Enable();
 
         try
         {
