@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>CLabs.Prompts</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Crumpet Labs</Authors>
+    <Description>Interactive terminal prompts with reactive dependency highlighting for .NET CLI tools</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="CLabs.Prompts.Tests" />
+  </ItemGroup>
+
+</Project>
