@@ -57,7 +57,7 @@ public static class MultiSelect
 
         var viewportHeight = Math.Clamp(
             Console.WindowHeight - options.ChromeLines,
-            options.MinViewportHeight,
+            Math.Min(options.MinViewportHeight, entries.Count),
             entries.Count);
 
         Console.CursorVisible = false;
