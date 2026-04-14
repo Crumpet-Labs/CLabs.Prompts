@@ -5,9 +5,16 @@ namespace CLabs.Prompts;
 /// and reactive dependency highlighting. Uses ANSI escape codes for
 /// flicker-free rendering with no external dependencies.
 /// </summary>
+/// <summary>
+/// An item to display in a <see cref="MultiSelect"/> prompt. The optional
+/// <paramref name="Subtitle"/> is rendered dimmed next to the name — keep it
+/// short enough to fit on one line.
+/// </summary>
+public readonly record struct MultiSelectItem(string Name, string? Subtitle = null);
+
 public static class MultiSelect
 {
-    internal record Entry(string Name, string? Group, bool IsHeader);
+    internal record Entry(string Name, string? Group, bool IsHeader, string? Subtitle = null);
 
     // ANSI sequences — relative movement only, no absolute positioning
     private const string Reset = "\x1b[0m";
@@ -28,6 +35,23 @@ public static class MultiSelect
         (string Group, string[] Items)[] groups,
         MultiSelectOptions? options = null)
     {
+        var wrapped = groups
+            .Select(g => (g.Group, g.Items.Select(i => new MultiSelectItem(i)).ToArray()))
+            .ToArray();
+        return Prompt(wrapped, options);
+    }
+
+    /// <summary>
+    /// Display an interactive multi-select prompt with grouped items. Each item
+    /// may carry an optional subtitle, rendered dim alongside the name.
+    /// Returns the list of selected item names, or an empty list if cancelled.
+    /// </summary>
+    /// <param name="groups">Rich items organised into named groups.</param>
+    /// <param name="options">Optional configuration for exclusions, dependency resolver, and display.</param>
+    public static List<string> Prompt(
+        (string Group, MultiSelectItem[] Items)[] groups,
+        MultiSelectOptions? options = null)
+    {
         options ??= new MultiSelectOptions();
         var exclude = options.Exclude ?? [];
 
@@ -37,14 +61,14 @@ public static class MultiSelect
 
         foreach (var (group, items) in groups)
         {
-            var available = items.Where(i => !exclude.Contains(i)).ToArray();
+            var available = items.Where(i => !exclude.Contains(i.Name)).ToArray();
             if (available.Length == 0) continue;
 
             entries.Add(new Entry("", group, IsHeader: true));
             foreach (var item in available)
             {
                 selectableIndices.Add(entries.Count);
-                entries.Add(new Entry(item, group, IsHeader: false));
+                entries.Add(new Entry(item.Name, group, IsHeader: false, Subtitle: item.Subtitle));
             }
         }
 
@@ -187,7 +211,11 @@ public static class MultiSelect
                     label = isCursor ? $"{White}{entry.Name}{Reset}" : $"{Dim}{entry.Name}{Reset}";
                 }
 
-                lines.Add($"{pointer}{checkbox}{label}{suffix}");
+                var subtitle = string.IsNullOrEmpty(entry.Subtitle)
+                    ? ""
+                    : $"  {Dim}{entry.Subtitle}{Reset}";
+
+                lines.Add($"{pointer}{checkbox}{label}{subtitle}{suffix}");
             }
         }
 
